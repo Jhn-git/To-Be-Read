@@ -5,6 +5,7 @@ import Header from './components/Header';
 import ProgressSection from './components/ProgressSection';
 import BookForm from './components/BookForm';
 import BookItem from './components/BookItem';
+import { importBooksFromJson } from './utils/importBooks';
 
 const LOCAL_STORAGE_KEY = 'tbr-tracker-state';
 
@@ -19,6 +20,17 @@ const App: React.FC = () => {
         console.error("Failed to parse local storage", e);
       }
     }
+
+    // First-time user: import books from book data
+    try {
+      const importedState = importBooksFromJson();
+      if (importedState) {
+        return importedState;
+      }
+    } catch (error) {
+      console.error('Error importing books:', error);
+    }
+
     return {
       tbrBooks: [],
       paidBooks: [],
